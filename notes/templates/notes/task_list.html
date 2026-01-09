@@ -1,0 +1,32 @@
+<h1>Task List</h1>
+<form method="get">
+    <label for="status">Status:</label>
+    <select name="status" id="status">
+        <option value="">All</option>
+        <option value="pending">Pending</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+    </select>
+
+    <label for="priority">Priority:</label>
+    <select name="priority" id="priority">
+        <option value="">All</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+
+    <label for="deadline">Deadline:</label>
+    <input type="date" name="deadline" id="deadline">
+
+    <button type="submit">Filter</button>
+</form>
+
+<ul>
+    {% for task in tasks %}
+        <li>
+            <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a> - {{ task.status }}
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'task_add' %}">Add Task</a>

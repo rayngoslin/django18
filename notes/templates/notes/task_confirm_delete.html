@@ -1,0 +1,8 @@
+<!-- filepath: c:\Users\nigma sigger\Desktop\py5\django18\notes\templates\notes\task_confirm_delete.html -->
+<h1>Confirm Delete</h1>
+<p>Are you sure you want to delete "{{ task.title }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+</form>
+<a href="{% url 'task_list' %}">Cancel</a>

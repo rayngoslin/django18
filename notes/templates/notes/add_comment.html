@@ -1,0 +1,8 @@
+<!-- filepath: c:\Users\nigma sigger\Desktop\py5\django18\notes\templates\notes\add_comment.html -->
+<h1>Add Comment</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Comment</button>
+</form>
+<a href="{% url 'task_detail' pk %}">Cancel</a>

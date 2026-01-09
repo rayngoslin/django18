@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ task.title }}</title>
+</head>
+<body>
+    <h1>{{ task.title }}</h1>
+    <p>{{ task.description }}</p>
+    <p>Status: {{ task.status }}</p>
+    <p>Priority: {{ task.priority }}</p>
+    <p>Deadline: {{ task.deadline }}</p>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in task.comments.all %}
+            <li>
+                <strong>{{ comment.author }}</strong>: {{ comment.content }} ({{ comment.created_at }})
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'add_comment' task.id %}">Add Comment</a>
+    <a href="{% url 'task_list' %}">Back to Task List</a>
+</body>
+</html>
