@@ -29,7 +29,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
-    template_name = 'notes/note_detail.html'
+    template_name = 'notes/task_detail.html'  # Explicitly specify the correct template
     context_object_name = 'task'
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -40,7 +40,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
-    template_name = 'notes/task_form.html'  # Reuse the same form template
+    template_name = 'notes/task_form.html'  # Reuse the task creation form template
     fields = ['title', 'description', 'status', 'priority', 'deadline']
     success_url = reverse_lazy('task_list')
 
@@ -51,7 +51,7 @@ class RegisterView(CreateView):
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
-    template_name = 'notes/task_confirm_delete.html'  # Create this template
+    template_name = 'notes/task_confirm_delete.html'  # Ensure this template exists
     success_url = reverse_lazy('task_list')
 
 class CommentForm(forms.ModelForm):
@@ -64,8 +64,13 @@ class AddCommentView(LoginRequiredMixin, FormView):
     form_class = CommentForm
 
     def form_valid(self, form):
-        task = Task.objects.get(pk=self.kwargs['pk'])
+        task = Task.objects.get(pk=self.kwargs['pk'])  # Get the task using the pk from the URL
         form.instance.task = task
         form.instance.author = self.request.user
         form.save()
-        return redirect('task_detail', pk=task.pk)
+        return redirect('task_detail', pk=task.pk)  # Pass the correct pk to the redirect
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']  # Pass pk to the template context
+        return context

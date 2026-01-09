@@ -5,4 +5,4 @@
     {{ form.as_p }}
     <button type="submit">Add Comment</button>
 </form>
-<a href="{% url 'task_detail' pk %}">Cancel</a>
+<a href="{% url 'task_detail' pk=pk %}">Cancel</a>  <!-- Pass pk explicitly -->
