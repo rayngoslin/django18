@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormView
 from django import forms
-from .models import Task, Comment  # Remove Note, keep Task
+from .models import Task, Comment, Like  # Import Like model
 from django.contrib.auth.forms import UserCreationForm
+from django.http import JsonResponse
+from django.views import View
 
 class TaskListView(LoginRequiredMixin, ListView):
     model = Task
@@ -74,3 +76,32 @@ class AddCommentView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']  # Pass pk to the template context
         return context
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    template_name = 'notes/comment_form.html'
+    fields = ['content']
+
+    def get_success_url(self):
+        return reverse_lazy('task_detail', kwargs={'pk': self.object.task.pk})
+
+    def test_func(self):
+        return self.request.user == self.get_object().author  # Ensure only the comment owner can edit
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'notes/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('task_detail', kwargs={'pk': self.object.task.pk})
+
+    def test_func(self):
+        return self.request.user == self.get_object().author  # Ensure only the comment owner can delete
+
+class LikeCommentView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        comment = Comment.objects.get(pk=pk)
+        like, created = Like.objects.get_or_create(comment=comment, user=request.user)
+        if not created:
+            like.delete()  # Unlike if the like already exists
+        return JsonResponse({'likes_count': comment.likes.count()})

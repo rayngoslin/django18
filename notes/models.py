@@ -30,3 +30,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author} on {self.task.title}"
+
+class Like(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('comment', 'user')  # Ensure a user can like a comment only once

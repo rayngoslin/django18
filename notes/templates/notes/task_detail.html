@@ -17,10 +17,35 @@
         {% for comment in task.comments.all %}
             <li>
                 <strong>{{ comment.author }}</strong>: {{ comment.content }} ({{ comment.created_at }})
+                <button class="like-button" data-id="{{ comment.id }}">
+                    Like ({{ comment.likes.count }})
+                </button>
+                {% if comment.author == user %}
+                    <a href="{% url 'edit_comment' comment.id %}">Edit</a>
+                    <a href="{% url 'delete_comment' comment.id %}">Delete</a>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
     <a href="{% url 'add_comment' task.id %}">Add Comment</a>
     <a href="{% url 'task_list' %}">Back to Task List</a>
+
+    <script>
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.dataset.id;
+                fetch(`/notes/${commentId}/comment/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.textContent = `Like (${data.likes_count})`;
+                });
+            });
+        });
+    </script>
 </body>
 </html>
