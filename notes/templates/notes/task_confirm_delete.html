@@ -1,8 +1,21 @@
-<!-- filepath: c:\Users\nigma sigger\Desktop\py5\django18\notes\templates\notes\task_confirm_delete.html -->
-<h1>Confirm Delete</h1>
-<p>Are you sure you want to delete "{{ task.title }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-</form>
-<a href="{% url 'task_list' %}">Cancel</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Delete</title>
+    <link rel="stylesheet" href="{% static 'notes/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Confirm Delete</h1>
+        <p>Are you sure you want to delete "{{ task.title }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, delete</button>
+        </form>
+        <a href="{% url 'task_list' %}">Cancel</a>
+    </div>
+</body>
+</html>

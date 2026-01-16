@@ -1,7 +1,21 @@
-<h1>{% if object %}Edit Task{% else %}Add Task{% endif %}</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% if object %}Save Changes{% else %}Add Task{% endif %}</button>
-</form>
-<a href="{% url 'task_list' %}">Cancel</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if object %}Edit Task{% else %}Add Task{% endif %}</title>
+    <link rel="stylesheet" href="{% static 'notes/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{% if object %}Edit Task{% else %}Add Task{% endif %}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">{% if object %}Save Changes{% else %}Add Task{% endif %}</button>
+        </form>
+        <a href="{% url 'task_list' %}">Cancel</a>
+    </div>
+</body>
+</html>
